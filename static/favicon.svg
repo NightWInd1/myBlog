@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" shape-rendering="crispEdges">
+  <defs>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="0.8" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <!-- Background -->
+  <rect width="32" height="32" fill="#0a0a0f"/>
+
+  <!-- Moon (yellow/neon gold) - pixel art -->
+  <!-- Row 1 -->
+  <rect x="20" y="2" width="4" height="1" fill="#ffd000"/>
+  <rect x="24" y="2" width="4" height="1" fill="#ffd000"/>
+  <!-- Row 2 -->
+  <rect x="18" y="3" width="2" height="1" fill="#ffd000"/>
+  <rect x="20" y="3" width="4" height="1" fill="#ffe44d"/>
+  <rect x="24" y="3" width="4" height="1" fill="#ffd000"/>
+  <!-- Row 3 -->
+  <rect x="16" y="4" width="4" height="1" fill="#ffd000"/>
+  <rect x="20" y="4" width="4" height="1" fill="#ffe44d"/>
+  <rect x="24" y="4" width="4" height="1" fill="#ffd000"/>
+  <!-- Row 4 -->
+  <rect x="14" y="5" width="2" height="1" fill="#ffd000"/>
+  <rect x="16" y="5" width="4" height="1" fill="#ffe44d"/>
+  <rect x="20" y="5" width="4" height="1" fill="#ffe44d"/>
+  <rect x="24" y="5" width="2" height="1" fill="#ffd000"/>
+  <!-- Row 5 -->
+  <rect x="14" y="6" width="2" height="1" fill="#ffe44d"/>
+  <rect x="16" y="6" width="4" height="1" fill="#ffe44d"/>
+  <rect x="20" y="6" width="4" height="1" fill="#ffe44d"/>
+  <rect x="24" y="6" width="2" height="1" fill="#ffe44d"/>
+  <!-- Row 6 -->
+  <rect x="12" y="7" width="2" height="1" fill="#ffd000"/>
+  <rect x="14" y="7" width="4" height="1" fill="#ffe44d"/>
+  <rect x="18" y="7" width="4" height="1" fill="#ffe44d"/>
+  <rect x="22" y="7" width="4" height="1" fill="#ffe44d"/>
+  <!-- Row 7 -->
+  <rect x="12" y="8" width="2" height="1" fill="#ffe44d"/>
+  <rect x="14" y="8" width="4" height="1" fill="#ffe44d"/>
+  <rect x="18" y="8" width="4" height="1" fill="#ffe44d"/>
+  <rect x="22" y="8" width="2" height="1" fill="#ffd000"/>
+  <!-- Row 8 -->
+  <rect x="12" y="9" width="2" height="1" fill="#ffd000"/>
+  <rect x="14" y="9" width="4" height="1" fill="#ffe44d"/>
+  <rect x="18" y="9" width="4" height="1" fill="#ffe44d"/>
+  <!-- Row 9 -->
+  <rect x="12" y="10" width="2" height="1" fill="#ffd000"/>
+  <rect x="14" y="10" width="4" height="1" fill="#ffe44d"/>
+  <rect x="18" y="10" width="4" height="1" fill="#ffd000"/>
+  <!-- Row 10 -->
+  <rect x="14" y="11" width="2" height="1" fill="#ffd000"/>
+  <rect x="16" y="11" width="4" height="1" fill="#ffe44d"/>
+  <!-- Row 11 -->
+  <rect x="14" y="12" width="2" height="1" fill="#ffd000"/>
+  <rect x="16" y="12" width="2" height="1" fill="#ffd000"/>
+
+  <!-- Wind lines (cyan/neon blue) - pixel art -->
+  <!-- Stream 1 (top) -->
+  <rect x="4" y="10" width="4" height="1" fill="#00f0ff"/>
+  <rect x="4" y="9" width="6" height="1" fill="#00f0ff"/>
+  <rect x="2" y="8" width="8" height="1" fill="#00f0ff"/>
+  <rect x="4" y="7" width="4" height="1" fill="#00f0ff"/>
+
+  <!-- Stream 2 (middle) -->
+  <rect x="4" y="16" width="4" height="1" fill="#ff00aa"/>
+  <rect x="2" y="17" width="8" height="1" fill="#ff00aa"/>
+  <rect x="4" y="18" width="6" height="1" fill="#ff00aa"/>
+  <rect x="4" y="19" width="4" height="1" fill="#ff00aa"/>
+
+  <!-- Stream 3 (bottom) -->
+  <rect x="6" y="24" width="2" height="1" fill="#00f0ff"/>
+  <rect x="4" y="25" width="8" height="1" fill="#00f0ff"/>
+  <rect x="2" y="26" width="6" height="1" fill="#00f0ff"/>
+  <rect x="4" y="27" width="4" height="1" fill="#00f0ff"/>
+
+  <!-- Small data dots on lines -->
+  <rect x="10" y="8" width="2" height="1" fill="#ff00aa"/>
+  <rect x="2" y="10" width="2" height="1" fill="#b000ff"/>
+  <rect x="10" y="18" width="2" height="1" fill="#00f0ff"/>
+  <rect x="8" y="26" width="2" height="1" fill="#b000ff"/>
+</svg>
