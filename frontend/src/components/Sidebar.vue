@@ -1,110 +1,98 @@
-<template>
-  <section class="comments-section" v-if="recentComments.length">
-    <div class="comments-inner">
-      <h2 class="section-title">最新留言</h2>
-      <div class="comment-list">
-        <div v-for="c in recentComments" :key="c.id" class="comment-item">
-          <div class="comment-head">
-            <span class="comment-author">{{ c.author_name }}</span>
-            <span class="comment-time">{{ c.created_at?.slice(0, 10) }}</span>
-          </div>
-          <p class="comment-content">{{ c.content }}</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="subscribe-section">
-    <div class="subscribe-inner">
-      <p class="subscribe-desc">♥ Subscribe</p>
-      <p class="subscribe-hint">订阅博客，不错过任何更新。</p>
-      <a href="/feed/" class="subscribe-btn">RSS 订阅</a>
-    </div>
-  </section>
-</template>
-
 <script setup>
-defineProps({
-  recentComments: { type: Array, default: () => [] }
-})
+import { useRoute } from 'vue-router'
+import { useSite } from '../composables/useSite'
+import { site } from '../config/site'
+import Icon from './Icon.vue'
+import Avatar from './Avatar.vue'
+const { categories, stats, error, load } = useSite()
+const route = useRoute()
 </script>
-
-<style scoped>
-.comments-section {
-  padding: 20px 0 60px;
-}
-.comments-inner {
-  max-width: 680px;
-  margin: 0 auto;
-  padding: 0 24px;
-}
-
-.comment-list {
-  display: flex;
-  flex-direction: column;
-}
-.comment-item {
-  padding: 16px 0;
-  border-bottom: 1px solid var(--color-border);
-  transition: border-color 0.2s;
-}
-.comment-item:last-child { border-bottom: none; }
-.comment-item:hover { border-color: var(--color-accent); }
-
-.comment-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 6px;
-}
-.comment-author {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--color-text);
-}
-.comment-time {
-  font-size: 12px;
-  color: var(--color-muted);
-}
-.comment-content {
-  font-size: 14px;
-  color: var(--color-text-secondary);
-  line-height: 1.6;
-}
-
-.subscribe-section {
-  padding: 0 0 60px;
-}
-.subscribe-inner {
-  max-width: 680px;
-  margin: 0 auto;
-  padding: 32px 24px;
-  text-align: center;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  background: var(--color-bg-card);
-}
-.subscribe-desc {
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--color-accent);
-  margin-bottom: 6px;
-}
-.subscribe-hint {
-  font-size: 14px;
-  color: var(--color-muted);
-  margin-bottom: 16px;
-}
-.subscribe-btn {
-  display: inline-flex;
-  align-items: center;
-  padding: 8px 24px;
-  border-radius: var(--radius-sm);
-  background: var(--color-accent);
-  color: #fff;
-  font-size: 14px;
-  font-weight: 500;
-  transition: background 0.2s;
-}
-.subscribe-btn:hover { background: var(--color-accent-hover); }
-</style>
+<template>
+  <aside class="left-sidebar" aria-label="博主和文章分类">
+    <section class="panel profile-card">
+      <div class="profile-cover">
+        <span>HELLO, FRIEND</span>
+        <Icon name="spark" :size="18" />
+      </div>
+      <router-link to="/about" class="profile-avatar" aria-label="了解晚风">
+        <Avatar />
+        <span class="online-dot"></span>
+      </router-link>
+      <h2>
+        {{ site.author }}
+        <span class="profile-leaf"><Icon name="leaf" :size="17" /></span>
+      </h2>
+      <span class="profile-english">{{ site.englishName }}</span>
+      <p class="profile-bio">{{ site.bio }}</p>
+      <div class="profile-stats">
+        <router-link to="/archives">
+          <strong>{{ stats?.posts ?? '—' }}</strong>
+          <span>文章</span>
+        </router-link>
+        <router-link to="/categories">
+          <strong>{{ stats?.categories ?? '—' }}</strong>
+          <span>分类</span>
+        </router-link>
+        <router-link to="/about">
+          <strong>{{ stats?.comments ?? '—' }}</strong>
+          <span>留言</span>
+        </router-link>
+      </div>
+      <div class="social-links">
+        <a
+          :href="site.github"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="GitHub"
+        >
+          <Icon name="github" :size="19" />
+        </a>
+        <a :href="`mailto:${site.email}`" aria-label="发送邮件">
+          <Icon name="mail" :size="19" />
+        </a>
+        <a href="/feed/" aria-label="RSS 订阅">
+          <Icon name="rss" :size="19" />
+        </a>
+      </div>
+    </section>
+    <section class="panel announcement-card">
+      <h2 class="widget-title">
+        <Icon name="spark" :size="18" />
+        小站公告
+      </h2>
+      <p>{{ site.announcement }}</p>
+      <router-link to="/about" class="subtle-link">
+        很高兴认识你
+        <Icon name="arrow" :size="15" />
+      </router-link>
+    </section>
+    <section class="panel category-widget">
+      <h2 class="widget-title">
+        <Icon name="folder" :size="18" />
+        文章分类
+        <router-link to="/categories" aria-label="查看全部分类">
+          <Icon name="chevron" :size="15" />
+        </router-link>
+      </h2>
+      <p v-if="error && !categories.length" class="muted">
+        分类加载失败
+        <button class="text-button" @click="load">重试</button>
+      </p>
+      <router-link
+        v-for="cat in categories"
+        :key="cat.id"
+        :to="`/category/${cat.slug}`"
+        class="category-row"
+        :class="{ selected: route.params.slug === cat.slug }"
+      >
+        <span>{{ cat.icon || '⌑' }}</span>
+        <span>{{ cat.name }}</span>
+        <small>{{ cat.post_count }}</small>
+      </router-link>
+    </section>
+    <div class="sidebar-note">
+      <Icon name="leaf" :size="16" />
+      慢慢来，好的故事值得等待。
+    </div>
+  </aside>
+</template>

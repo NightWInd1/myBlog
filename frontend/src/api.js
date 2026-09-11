@@ -1,47 +1,21 @@
-const BASE = '/api'
-
-export async function fetchPosts(page = 1, params = {}) {
-  const query = new URLSearchParams({ page, ...params }).toString()
-  const res = await fetch(`${BASE}/posts/?${query}`)
-  if (!res.ok) throw new Error(`API error: ${res.status}`)
+export async function get(url, options = {}) {
+  const res = await fetch(url, options)
+  if (!res.ok) {
+    const error = new Error(
+      res.status === 404 ? '内容不存在或已被移走' : '暂时无法加载，请稍后重试',
+    )
+    error.status = res.status
+    throw error
+  }
   return res.json()
 }
-
-export async function fetchPinnedPosts() {
-  const res = await fetch(`${BASE}/posts/pinned/`)
-  if (!res.ok) throw new Error(`API error: ${res.status}`)
-  return res.json()
-}
-
-export async function fetchLatestPosts() {
-  const res = await fetch(`${BASE}/posts/latest/`)
-  if (!res.ok) throw new Error(`API error: ${res.status}`)
-  return res.json()
-}
-
-export async function fetchPostBySlug(slug) {
-  const res = await fetch(`${BASE}/posts/${slug}/`)
-  if (!res.ok) throw new Error(`API error: ${res.status}`)
-  return res.json()
-}
-
-export async function fetchLatestComments() {
-  const res = await fetch(`${BASE}/comments/latest/`)
-  if (!res.ok) throw new Error(`API error: ${res.status}`)
-  return res.json()
-}
-
-export async function searchPosts(q, page = 1) {
-  const query = new URLSearchParams({ q, page }).toString()
-  const res = await fetch(`${BASE}/posts/search/?${query}`)
-  if (!res.ok) throw new Error(`API error: ${res.status}`)
-  return res.json()
-}
-
-export async function get(url) {
-  const res = await fetch(url)
-  if (!res.ok) throw new Error(`API error: ${res.status}`)
-  return res.json()
-}
-
+export const fetchPosts = (page = 1, params = {}, options) =>
+  get(`/api/posts/?${new URLSearchParams({ page, ...params })}`, options)
+export const fetchPinnedPosts = () => get('/api/posts/pinned/')
+export const fetchLatestPosts = () => get('/api/posts/latest/')
+export const fetchPostBySlug = (slug, options) =>
+  get(`/api/posts/${encodeURIComponent(slug)}/`, options)
+export const fetchLatestComments = () => get('/api/comments/latest/')
+export const searchPosts = (q, page = 1, options) =>
+  get(`/api/posts/search/?${new URLSearchParams({ q, page })}`, options)
 export default { get }
