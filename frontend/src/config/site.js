@@ -1,4 +1,4 @@
-import landscape from '../assets/landscape.jpg'
+import animeCover from '../assets/anime-cover.svg'
 
 // 日常外观和个人资料在这里调整，文章仍由 Django 后台管理。
 export const site = {
@@ -9,8 +9,8 @@ export const site = {
   bio: '一个热爱技术与生活的普通人。\n在这里，记录探索，也收藏日常。',
   announcement:
     '欢迎来到我的小小世界。愿这里的文字，能为你带来一点灵感与好心情。',
-  heroImage: landscape,
-  heroCredit: 'Photo · Unsplash',
+  heroImage: animeCover,
+  heroCredit: 'Original Sakura Night',
   github: 'https://github.com/NightWInd1',
   email: '2163392313@qq.com',
   skills: [
@@ -23,5 +23,9 @@ export const site = {
     'Git',
     'SQL',
   ],
-  defaultHue: 158,
+  defaultHue: 343,
+  music: {
+    // 示例：{ title: '曲名', artist: '作者', src: '/static/music/song.mp3' }
+    tracks: [],
+  },
 }

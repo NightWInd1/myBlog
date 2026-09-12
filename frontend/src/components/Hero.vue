@@ -1,6 +1,7 @@
 <script setup>
 import { site } from '../config/site'
 import Icon from './Icon.vue'
+import AnimeScene from './AnimeScene.vue'
 defineProps({ compact: Boolean })
 function explore() {
   document.getElementById('main-content')?.scrollIntoView({
@@ -13,12 +14,7 @@ function explore() {
 </script>
 <template>
   <section class="hero" :class="{ compact }" aria-label="欢迎来到晚风的博客">
-    <img
-      class="hero-image"
-      :src="site.heroImage"
-      alt="群山环绕着平静的湖泊，山间小屋倒映在水面"
-      fetchpriority="high"
-    />
+    <AnimeScene />
     <div class="hero-shade"></div>
     <div class="hero-copy" v-if="!compact">
       <span class="hero-eyebrow">
@@ -39,7 +35,7 @@ function explore() {
     </div>
     <div class="hero-bottom" v-if="!compact">
       <span>STAY CURIOUS. KEEP CREATING.</span>
-      <span>{{ site.heroCredit }}</span>
+      <span>ORIGINAL SAKURA NIGHT</span>
     </div>
     <svg
       class="hero-wave"

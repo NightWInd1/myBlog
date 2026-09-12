@@ -4,6 +4,7 @@ import { useSite } from '../composables/useSite'
 import { site } from '../config/site'
 import Icon from './Icon.vue'
 import Avatar from './Avatar.vue'
+import MusicPlayer from './MusicPlayer.vue'
 const { categories, stats, error, load } = useSite()
 const route = useRoute()
 </script>
@@ -55,6 +56,7 @@ const route = useRoute()
         </a>
       </div>
     </section>
+    <MusicPlayer />
     <section class="panel announcement-card">
       <h2 class="widget-title">
         <Icon name="spark" :size="18" />

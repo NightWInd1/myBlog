@@ -77,7 +77,20 @@ systemctl restart django-myblog
 
 布局灵感：[CuteLeaf/Firefly](https://github.com/CuteLeaf/Firefly)，页脚保留设计来源链接。Vue 实现为本项目重新编写，未复制 Firefly 的源码或游戏角色素材。
 
-横幅为本地山湖照片 `frontend/src/assets/landscape.jpg`，来源：
-https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1920&q=80
+横幅与文章封面兜底使用本地原创 SVG：`frontend/src/components/AnimeScene.vue` 和 `frontend/src/assets/anime-cover.svg`，不会在访问时请求远程图片。头像、叶片 favicon 和场景均为项目内 SVG 图形，可直接编辑。没有使用 AI 生成图片。
 
-图片来源平台：[Unsplash](https://unsplash.com/license)。不会在每次访问时请求远程横幅。头像与叶片 favicon 为本项目的 SVG 图形，可直接编辑。没有使用 AI 生成图片。
+## 樱花二次元主题与音乐
+
+- `frontend/src/components/AnimeScene.vue` 是原创 SVG 樱花月夜场景，包含月亮、云、山、水面、小屋和人物剪影，不需要远程图片。
+- `SakuraFall.vue` 生成 30 枚带随机延迟、漂移和旋转的花瓣；`ParticleField.vue` 生成带发光和鼠标扰动的 Canvas 粒子。系统开启减少动态效果时，两层都会停用。
+- `MusicPlayer.vue` 在桌面左栏显示。默认曲目为空，不会自动播放；补充 `config/site.js`：
+
+```js
+music: {
+  tracks: [
+    { title: '曲名', artist: '作者', src: '/static/music/song.mp3' },
+  ],
+}
+```
+
+填入多个曲目后，播放器会启用播放/暂停、进度、音量、上一首、下一首和曲目列表。把音频文件放在 `static/music/` 后重新构建即可。
