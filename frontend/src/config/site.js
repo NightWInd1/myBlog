@@ -3,7 +3,7 @@ import animeGirlHero from '../assets/anime-girl-hero.jpg'
 
 // 日常外观和个人资料在这里调整，文章仍由 Django 后台管理。
 export const site = {
-  name: '晚风的博客',
+  name: '晚风如歌',
   author: '晚风',
   englishName: 'Nightwind',
   subtitle: '把日子写成诗，把热爱写进代码。',

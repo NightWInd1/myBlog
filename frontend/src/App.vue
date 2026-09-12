@@ -19,7 +19,7 @@ onMounted(load)
   <SakuraFall />
   <a href="#main-content" class="skip-link">跳转到正文</a>
   <Header />
-  <Hero :compact="route.name !== 'Home'" />
+  <Hero :key="route.name" :compact="route.name !== 'Home'" />
   <div class="site-layout" :class="{ 'inner-layout': route.name !== 'Home' }">
     <Sidebar />
     <main id="main-content" class="main-content" tabindex="-1">

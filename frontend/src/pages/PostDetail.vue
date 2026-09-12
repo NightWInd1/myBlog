@@ -54,7 +54,7 @@ async function load() {
       signal: current.signal,
     })
     post.value = data
-    document.title = `${data.title} · 晚风的博客`
+    document.title = `${data.title} · 晚风如歌`
     prepareContent(data.content)
   } catch (e) {
     if (e.name !== 'AbortError') error.value = e.message

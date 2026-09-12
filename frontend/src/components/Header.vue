@@ -30,7 +30,7 @@ const categoryOrder = [
 const nav = computed(() => {
   const lookup = new Map(categories.value.map((item) => [item.slug, item]))
   return [
-    { slug: '', to: '/', text: '首页', icon: 'home', children: [] },
+    { slug: 'home', to: '/', text: '首页', icon: 'home', children: [] },
     ...categoryOrder.map((item) => ({
       ...item,
       to: `/category/${item.slug}`,
@@ -46,9 +46,20 @@ function toggleSubmenu(item) {
   activeMenu.value = activeMenu.value === item.slug ? '' : item.slug
 }
 function isActive(item) {
-  return item.slug === ''
+  return item.slug === 'home'
     ? route.path === '/'
     : route.path === item.to || route.path.startsWith(`${item.to}/`)
+}
+function goHome() {
+  activeMenu.value = ''
+  menuOpen.value = false
+  router.push('/')
+}
+function handleNavClick(event, item) {
+  if (item.slug === 'home') {
+    event.preventDefault()
+    goHome()
+  }
 }
 async function openSearch() {
   menuOpen.value = settingsOpen.value = false
@@ -116,7 +127,7 @@ onUnmounted(() => {
     }"
   >
     <div class="header-inner">
-      <router-link class="brand" to="/" aria-label="晚风的博客首页">
+      <router-link class="brand" to="/" aria-label="晚风如歌首页" @click.prevent="goHome">
         <span class="brand-mark"><Icon name="leaf" :size="25" /></span>
         {{ site.name }}
         <span class="brand-dot">.</span>
@@ -145,6 +156,7 @@ onUnmounted(() => {
             class="nav-link"
             :class="{ active: isActive(item) }"
             :to="item.to"
+            @click="handleNavClick($event, item)"
           >
             <Icon :name="item.icon" :size="17" />
             {{ item.text }}
@@ -266,7 +278,11 @@ onUnmounted(() => {
             <span><Icon :name="item.icon" :size="18" />{{ item.text }}</span>
             <Icon :name="activeMenu === item.slug ? 'up' : 'down'" :size="15" />
           </button>
-          <router-link v-else :to="item.to">
+          <router-link
+            v-else
+            :to="item.to"
+            @click="handleNavClick($event, item)"
+          >
             <Icon :name="item.icon" :size="18" />
             {{ item.text }}
           </router-link>
