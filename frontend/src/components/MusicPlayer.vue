@@ -69,7 +69,7 @@ onBeforeUnmount(() => audio.value?.pause())
     <div class="music-heading">
       <span>
         <Icon name="music" :size="18" />
-        BGM 音乐角
+        音乐
       </span>
       <button
         class="music-expand"

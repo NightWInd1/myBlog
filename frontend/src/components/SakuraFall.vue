@@ -1,13 +1,13 @@
 <script setup>
 import { computed } from 'vue'
 const petals = computed(() =>
-  Array.from({ length: 30 }, (_, i) => ({
+  Array.from({ length: 42 }, (_, i) => ({
     id: i,
     left: `${(i * 37) % 101}%`,
-    delay: `${-((i * 1.71) % 14)}s`,
-    duration: `${8 + (i % 7) * 1.35}s`,
-    size: `${7 + (i % 4) * 2}px`,
-    drift: `${-80 + (i % 9) * 20}px`,
+    delay: `${-((i * 1.71) % 17)}s`,
+    duration: `${10 + (i % 8) * 1.45}s`,
+    size: `${6 + (i % 5) * 2}px`,
+    drift: `${-105 + (i % 11) * 21}px`,
     rotate: `${(i * 43) % 360}deg`,
   })),
 )

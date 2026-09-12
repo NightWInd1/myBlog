@@ -77,12 +77,12 @@ systemctl restart django-myblog
 
 布局灵感：[CuteLeaf/Firefly](https://github.com/CuteLeaf/Firefly)，页脚保留设计来源链接。Vue 实现为本项目重新编写，未复制 Firefly 的源码或游戏角色素材。
 
-横幅与文章封面兜底使用本地原创 SVG：`frontend/src/components/AnimeScene.vue` 和 `frontend/src/assets/anime-cover.svg`，不会在访问时请求远程图片。头像、叶片 favicon 和场景均为项目内 SVG 图形，可直接编辑。没有使用 AI 生成图片。
+横幅与文章封面兜底使用本地二次元图片：`frontend/src/assets/anime-girl-hero.jpg` 和 `frontend/src/assets/anime-girl-cover.jpg`，不会在访问时请求远程图片。头像、叶片 favicon 和装饰场景仍为项目内 SVG 图形。
 
 ## 樱花二次元主题与音乐
 
-- `frontend/src/components/AnimeScene.vue` 是原创 SVG 樱花月夜场景，包含月亮、云、山、水面、小屋和人物剪影，不需要远程图片。
-- `SakuraFall.vue` 生成 30 枚带随机延迟、漂移和旋转的花瓣；`ParticleField.vue` 生成带发光和鼠标扰动的 Canvas 粒子。系统开启减少动态效果时，两层都会停用。
+- 首页横幅使用 `anime-girl-hero.jpg`，随页面滚动产生轻微视差；文章卡片使用 `anime-girl-cover.jpg` 作为本地兜底，避免外链封面失效或裁切错位。
+- `SakuraFall.vue` 生成 42 枚带随机延迟、漂移、旋转和高光的花瓣；`ParticleField.vue` 生成带发光和鼠标扰动的 Canvas 粒子。系统开启减少动态效果时，两层都会停用。
 - `MusicPlayer.vue` 在桌面左栏显示。默认曲目为空，不会自动播放；补充 `config/site.js`：
 
 ```js

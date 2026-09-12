@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router'
 import DOMPurify from 'dompurify'
 import { fetchPostBySlug } from '../api'
 import { formatDate } from '../utils/format'
+import { site } from '../config/site'
 import Icon from '../components/Icon.vue'
 const route = useRoute()
 const post = ref(null),
@@ -11,6 +12,7 @@ const post = ref(null),
   error = ref(''),
   headings = ref([]),
   body = ref('')
+const coverFailed = ref(false)
 const tocOpen = ref(true)
 let controller
 function prepareContent(html) {
@@ -43,6 +45,7 @@ async function load() {
   controller = current
   loading.value = true
   post.value = null
+  coverFailed.value = false
   error.value = ''
   headings.value = []
   body.value = ''
@@ -114,11 +117,17 @@ onUnmounted(() => controller?.abort())
         </div>
       </header>
       <img
-        v-if="post.cover_image"
+        v-if="post.cover_image && !coverFailed"
         :src="post.cover_image"
         :alt="post.title"
         class="article-cover"
-        @error="post.cover_image = ''"
+        @error="coverFailed = true"
+      />
+      <img
+        v-else
+        class="article-cover"
+        :src="site.postImages?.[0] || site.heroImage"
+        :alt="post.title"
       />
       <nav v-if="headings.length" class="article-toc" aria-label="文章目录">
         <button @click="tocOpen = !tocOpen" :aria-expanded="tocOpen">

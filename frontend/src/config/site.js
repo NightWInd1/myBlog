@@ -1,4 +1,5 @@
-import animeCover from '../assets/anime-cover.svg'
+import animeGirlCover from '../assets/anime-girl-cover.jpg'
+import animeGirlHero from '../assets/anime-girl-hero.jpg'
 
 // 日常外观和个人资料在这里调整，文章仍由 Django 后台管理。
 export const site = {
@@ -9,7 +10,8 @@ export const site = {
   bio: '一个热爱技术与生活的普通人。\n在这里，记录探索，也收藏日常。',
   announcement:
     '欢迎来到我的小小世界。愿这里的文字，能为你带来一点灵感与好心情。',
-  heroImage: animeCover,
+  heroImage: animeGirlHero,
+  postImages: [animeGirlCover, animeGirlHero],
   heroCredit: 'Original Sakura Night',
   github: 'https://github.com/NightWInd1',
   email: '2163392313@qq.com',

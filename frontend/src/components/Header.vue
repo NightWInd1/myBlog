@@ -10,7 +10,8 @@ const route = useRoute(),
 const menuOpen = ref(false),
   settingsOpen = ref(false),
   query = ref(''),
-  scrolled = ref(false)
+  scrolled = ref(false),
+  scrollDistance = ref(0)
 const searchInput = ref(null),
   dialog = ref(null),
   searchTrigger = ref(null)
@@ -55,6 +56,7 @@ function toggleMenu() {
 }
 function scroll() {
   scrolled.value = window.scrollY > 60
+  scrollDistance.value = Math.min(window.scrollY / 260, 1)
 }
 watch(
   () => route.fullPath,
@@ -73,7 +75,11 @@ onUnmounted(() => {
 })
 </script>
 <template>
-  <header class="site-header" :class="{ scrolled }">
+  <header
+    class="site-header"
+    :class="{ scrolled }"
+    :style="{ '--nav-lift': `${scrollDistance * -4}px` }"
+  >
     <div class="header-inner">
       <router-link class="brand" to="/" aria-label="晚风的博客首页">
         <span class="brand-mark"><Icon name="leaf" :size="25" /></span>
@@ -177,7 +183,7 @@ onUnmounted(() => {
           class="hue-slider"
         />
         <button class="text-button" @click="hue = site.defaultHue">
-          恢复薄荷绿
+          恢复樱花粉
         </button>
       </div>
       <nav

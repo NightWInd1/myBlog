@@ -14,10 +14,14 @@ watch(
     failed.value = false
   },
 )
+const fallbackCover = computed(() => {
+  const images = site.postImages?.length ? site.postImages : [site.heroImage]
+  return images[props.index % images.length]
+})
 const cover = computed(() =>
   !failed.value && props.post.cover_image
     ? props.post.cover_image
-    : site.heroImage,
+    : fallbackCover.value,
 )
 </script>
 <template>
@@ -78,7 +82,7 @@ const cover = computed(() =>
         :src="cover"
         alt=""
         loading="lazy"
-        :style="{ objectPosition: `${35 + (index % 3) * 20}% center` }"
+        :style="{ objectPosition: 'center center' }"
         @error="failed = true"
       />
       <span v-if="!post.cover_image || failed" class="cover-caption">

@@ -1,8 +1,17 @@
 <script setup>
+import { onMounted, onUnmounted, ref } from 'vue'
 import { site } from '../config/site'
 import Icon from './Icon.vue'
-import AnimeScene from './AnimeScene.vue'
 defineProps({ compact: Boolean })
+const parallax = ref(0)
+function updateParallax() {
+  parallax.value = Math.min(window.scrollY * 0.14, 76)
+}
+onMounted(() => {
+  window.addEventListener('scroll', updateParallax, { passive: true })
+  updateParallax()
+})
+onUnmounted(() => window.removeEventListener('scroll', updateParallax))
 function explore() {
   document.getElementById('main-content')?.scrollIntoView({
     behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -14,7 +23,13 @@ function explore() {
 </script>
 <template>
   <section class="hero" :class="{ compact }" aria-label="欢迎来到晚风的博客">
-    <AnimeScene />
+    <img
+      class="hero-image"
+      :src="site.heroImage"
+      alt="樱花树下的二次元少女"
+      fetchpriority="high"
+      :style="{ transform: `translate3d(0, ${parallax}px, 0) scale(1.08)` }"
+    />
     <div class="hero-shade"></div>
     <div class="hero-copy" v-if="!compact">
       <span class="hero-eyebrow">
