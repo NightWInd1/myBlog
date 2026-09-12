@@ -94,3 +94,18 @@ music: {
 ```
 
 填入多个曲目后，播放器会启用播放/暂停、进度、音量、上一首、下一首和曲目列表。把音频文件放在 `static/music/` 后重新构建即可。
+
+## Wagtail 后台
+
+后台已迁移到 Wagtail，继续使用现有 `Post`、`Category` 和 `Comment` 数据表，Vue API 路径保持不变。Wagtail 会在 `/admin/` 提供文章、分类和评论管理；原 Django Admin 作为兼容入口保留在 `/django-admin/`。
+
+首次部署需要安装依赖并执行 Wagtail 迁移：
+
+```bash
+cd /opt/myBlog
+source venv/bin/activate
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py collectstatic --noinput
+sudo systemctl restart django-myblog
+```
