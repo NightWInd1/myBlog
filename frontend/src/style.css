@@ -2336,13 +2336,19 @@ body::before { content: ''; position: fixed; inset: 0; z-index: -2; pointer-even
   transform: translateY(var(--nav-lift, 0px));
 }
 .site-header.scrolled .header-inner {
-  background: rgba(255, 247, 251, .92);
+  background: rgba(255, 247, 251, var(--nav-alpha, .9));
   box-shadow: 0 12px 32px rgba(127, 54, 94, .2), 0 0 0 1px rgba(255, 255, 255, .72);
 }
 [data-theme='dark'] .site-header.scrolled .header-inner {
-  background: rgba(45, 24, 38, .94);
+  background: rgba(45, 24, 38, var(--nav-alpha, .9));
   box-shadow: 0 12px 32px rgba(18, 5, 16, .42), 0 0 0 1px rgba(255, 179, 211, .12);
 }
+.header-inner {
+  background: rgba(255, 247, 251, var(--nav-alpha, .42));
+  backdrop-filter: blur(var(--nav-blur, 12px));
+  transition: background .28s ease, backdrop-filter .28s ease, box-shadow .28s ease;
+}
+[data-theme='dark'] .header-inner { background: rgba(45, 24, 38, var(--nav-alpha, .42)); }
 .hero-image {
   display: block;
   z-index: 0;
@@ -2397,7 +2403,8 @@ body::before { content: ''; position: fixed; inset: 0; z-index: -2; pointer-even
 @media (max-width: 720px) {
   .grid-view .post-card-cover { min-height: 127px; height: 127px; }
 }
-.site-layout.inner-layout { margin-top: -18px; }
+.hero.compact { height: 500px; }
+.site-layout.inner-layout { margin-top: -19px; }
 .nav-item { position: relative; }
 .desktop-nav .nav-link {
   display: flex;
@@ -2462,8 +2469,11 @@ body::before { content: ''; position: fixed; inset: 0; z-index: -2; pointer-even
 .mobile-submenu { padding: 0 0 4px 38px; }
 .mobile-submenu a { display: flex; justify-content: space-between; padding: 8px 12px; font-size: 12px; color: var(--color-text-secondary); }
 .mobile-submenu small { color: var(--color-muted); }
+.submenu-enter-active, .submenu-leave-active { transition: opacity .24s ease, transform .24s cubic-bezier(.22, 1, .36, 1); transition-delay: var(--submenu-delay, 0ms); }
+.submenu-enter-from, .submenu-leave-to { opacity: 0; transform: translateY(-7px) scale(.97); }
 .avatar-image { display: block; width: 100%; height: 100%; border-radius: 50%; object-fit: cover; object-position: 68% center; }
 @media (max-width: 720px) {
-  .site-layout.inner-layout { margin-top: 0; }
+  .hero.compact { height: 455px; }
+  .site-layout.inner-layout { margin-top: -5px; }
   .nav-submenu { position: static; transform: none; box-shadow: none; border: 0; border-radius: 0; padding: 0 0 4px 38px; background: transparent; backdrop-filter: none; }
 }

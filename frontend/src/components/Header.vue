@@ -86,6 +86,7 @@ function toggleMenu() {
 function scroll() {
   scrolled.value = window.scrollY > 60
   scrollDistance.value = Math.min(window.scrollY / 260, 1)
+  if (activeMenu.value) activeMenu.value = ''
 }
 watch(
   () => route.fullPath,
@@ -108,7 +109,11 @@ onUnmounted(() => {
   <header
     class="site-header"
     :class="{ scrolled }"
-    :style="{ '--nav-lift': `${scrollDistance * -4}px` }"
+    :style="{
+      '--nav-lift': `${scrollDistance * -4}px`,
+      '--nav-alpha': (0.42 + scrollDistance * 0.48).toFixed(2),
+      '--nav-blur': `${12 + scrollDistance * 10}px`,
+    }"
   >
     <div class="header-inner">
       <router-link class="brand" to="/" aria-label="晚风的博客首页">
@@ -144,12 +149,22 @@ onUnmounted(() => {
             <Icon :name="item.icon" :size="17" />
             {{ item.text }}
           </router-link>
-          <div v-if="hasChildren(item) && activeMenu === item.slug" class="nav-submenu">
-            <router-link v-for="child in item.children" :key="child.id" :to="`/category/${child.slug}`">
+          <TransitionGroup
+            v-if="hasChildren(item) && activeMenu === item.slug"
+            name="submenu"
+            tag="div"
+            class="nav-submenu"
+          >
+            <router-link
+              v-for="(child, index) in item.children"
+              :key="child.id"
+              :style="{ '--submenu-delay': `${index * 55}ms` }"
+              :to="`/category/${child.slug}`"
+            >
               {{ child.name }}
               <small>{{ child.post_count }}</small>
             </router-link>
-          </div>
+          </TransitionGroup>
         </div>
       </nav>
       <div class="header-actions">
@@ -255,12 +270,22 @@ onUnmounted(() => {
             <Icon :name="item.icon" :size="18" />
             {{ item.text }}
           </router-link>
-          <div v-if="hasChildren(item) && activeMenu === item.slug" class="mobile-submenu">
-            <router-link v-for="child in item.children" :key="child.id" :to="`/category/${child.slug}`">
+          <TransitionGroup
+            v-if="hasChildren(item) && activeMenu === item.slug"
+            name="submenu"
+            tag="div"
+            class="mobile-submenu"
+          >
+            <router-link
+              v-for="(child, index) in item.children"
+              :key="child.id"
+              :style="{ '--submenu-delay': `${index * 55}ms` }"
+              :to="`/category/${child.slug}`"
+            >
               {{ child.name }}
               <small>{{ child.post_count }}</small>
             </router-link>
-          </div>
+          </TransitionGroup>
         </template>
       </nav>
     </div>

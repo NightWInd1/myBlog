@@ -8,4 +8,4 @@ frontend/node_modules/
 .env.*
 !.env.example
 AGENTS.md
-/二次元美少女*.jpg
+/*.jpg
