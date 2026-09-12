@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils import timezone
+from wagtail.fields import RichTextField
 
 User = get_user_model()
 
@@ -33,7 +34,21 @@ class Post(models.Model):
     slug = models.SlugField(max_length=200, unique=True, verbose_name='URL 标识')
     author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='作者')
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='分类')
-    content = models.TextField(verbose_name='正文')
+    content = RichTextField(
+        features=[
+            'h2',
+            'h3',
+            'bold',
+            'italic',
+            'ol',
+            'ul',
+            'link',
+            'document-link',
+            'image',
+            'embed',
+        ],
+        verbose_name='正文',
+    )
     excerpt = models.TextField(max_length=500, blank=True, verbose_name='摘要')
     cover_image = models.URLField(blank=True, verbose_name='封面图片链接')
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft', verbose_name='状态')

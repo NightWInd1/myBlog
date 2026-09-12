@@ -4,6 +4,7 @@ from html import unescape
 
 from django.utils.html import linebreaks, strip_tags
 from rest_framework import serializers
+from wagtail.rich_text import expand_db_html
 
 from .models import Category, Post, Comment
 
@@ -15,7 +16,10 @@ def plain_text(value):
 
 def to_html(value):
     if re.search(r'<[^>]+>', value):
-        return value
+        try:
+            return expand_db_html(value)
+        except (KeyError, ValueError):
+            return value
     return linebreaks(value, autoescape=True)
 
 

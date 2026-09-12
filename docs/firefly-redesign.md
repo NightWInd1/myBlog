@@ -109,3 +109,5 @@ python manage.py migrate
 python manage.py collectstatic --noinput
 sudo systemctl restart django-myblog
 ```
+
+文章正文使用 Wagtail Draftail 富文本编辑器，可以直接插入标题、粗体、斜体、列表、链接、图片和嵌入内容。新文章先保存为草稿，确认标题、分类和封面后，将“状态”改为“已发布”再保存，前台 API 会自动显示。

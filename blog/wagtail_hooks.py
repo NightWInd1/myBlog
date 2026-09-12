@@ -5,6 +5,7 @@
 """
 
 from wagtail import hooks
+from wagtail.admin.panels import FieldPanel
 from wagtail.admin.viewsets.model import ModelViewSet
 
 from .models import Category, Comment, Post
@@ -22,17 +23,17 @@ class PostViewSet(ModelViewSet):
     search_fields = ('title', 'slug', 'content', 'excerpt')
     ordering = ('-is_pinned', '-created_at')
     inspect_view_enabled = True
-    form_fields = (
-        'title',
-        'slug',
-        'author',
-        'category',
-        'status',
-        'is_pinned',
-        'content',
-        'excerpt',
-        'cover_image',
-    )
+    panels = [
+        FieldPanel('title'),
+        FieldPanel('slug'),
+        FieldPanel('author'),
+        FieldPanel('category'),
+        FieldPanel('status'),
+        FieldPanel('is_pinned'),
+        FieldPanel('content'),
+        FieldPanel('excerpt'),
+        FieldPanel('cover_image'),
+    ]
 
 
 class CategoryViewSet(ModelViewSet):
