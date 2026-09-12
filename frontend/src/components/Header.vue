@@ -1,26 +1,55 @@
 <script setup>
-import { ref, watch, nextTick, onMounted, onUnmounted } from 'vue'
+import { ref, computed, watch, nextTick, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAppearance } from '../composables/useAppearance'
+import { useSite } from '../composables/useSite'
 import { site } from '../config/site'
 import Icon from './Icon.vue'
 const { theme, resolvedTheme, hue } = useAppearance()
 const route = useRoute(),
   router = useRouter()
+const { categories } = useSite()
 const menuOpen = ref(false),
   settingsOpen = ref(false),
   query = ref(''),
   scrolled = ref(false),
-  scrollDistance = ref(0)
+  scrollDistance = ref(0),
+  activeMenu = ref('')
 const searchInput = ref(null),
   dialog = ref(null),
   searchTrigger = ref(null)
-const nav = [
-  { to: '/', text: '首页', icon: 'home' },
-  { to: '/archives', text: '归档', icon: 'archive' },
-  { to: '/categories', text: '分类', icon: 'folder' },
-  { to: '/about', text: '关于', icon: 'info' },
+const categoryOrder = [
+  { slug: 'life', text: '生活随笔' },
+  { slug: 'devops', text: '运维部署' },
+  { slug: 'posts', text: '文章' },
+  { slug: 'memories', text: '记忆' },
+  { slug: 'poetry', text: '诗词' },
+  { slug: 'changes', text: '变化' },
+  { slug: 'more', text: '更多' },
 ]
+const nav = computed(() => {
+  const lookup = new Map(categories.value.map((item) => [item.slug, item]))
+  return [
+    { slug: '', to: '/', text: '首页', icon: 'home', children: [] },
+    ...categoryOrder.map((item) => ({
+      ...item,
+      to: `/category/${item.slug}`,
+      icon: lookup.get(item.slug)?.icon || 'folder',
+      children: lookup.get(item.slug)?.children || [],
+    })),
+  ]
+})
+function hasChildren(item) {
+  return item.children?.length > 0
+}
+function toggleSubmenu(item) {
+  activeMenu.value = activeMenu.value === item.slug ? '' : item.slug
+}
+function isActive(item) {
+  return item.slug === ''
+    ? route.path === '/'
+    : route.path === item.to || route.path.startsWith(`${item.to}/`)
+}
 async function openSearch() {
   menuOpen.value = settingsOpen.value = false
   await nextTick()
@@ -62,6 +91,7 @@ watch(
   () => route.fullPath,
   () => {
     menuOpen.value = settingsOpen.value = false
+    activeMenu.value = ''
   },
 )
 onMounted(() => {
@@ -87,22 +117,40 @@ onUnmounted(() => {
         <span class="brand-dot">.</span>
       </router-link>
       <nav class="desktop-nav" aria-label="主导航">
-        <router-link
+        <div
           v-for="item in nav"
-          :key="item.to"
-          :to="item.to"
-          :class="{
-            active:
-              item.to === '/'
-                ? route.path === '/'
-                : route.path.startsWith(item.to) ||
-                  (item.to === '/categories' &&
-                    route.path.startsWith('/category/')),
-          }"
+          :key="item.slug"
+          class="nav-item"
+          :class="{ open: activeMenu === item.slug }"
         >
-          <Icon :name="item.icon" :size="17" />
-          {{ item.text }}
-        </router-link>
+          <button
+            v-if="hasChildren(item)"
+            class="nav-link nav-parent"
+            :class="{ active: isActive(item) }"
+            type="button"
+            :aria-expanded="activeMenu === item.slug"
+            @click="toggleSubmenu(item)"
+          >
+            <Icon :name="item.icon" :size="17" />
+            {{ item.text }}
+            <Icon name="down" :size="12" />
+          </button>
+          <router-link
+            v-else
+            class="nav-link"
+            :class="{ active: isActive(item) }"
+            :to="item.to"
+          >
+            <Icon :name="item.icon" :size="17" />
+            {{ item.text }}
+          </router-link>
+          <div v-if="hasChildren(item) && activeMenu === item.slug" class="nav-submenu">
+            <router-link v-for="child in item.children" :key="child.id" :to="`/category/${child.slug}`">
+              {{ child.name }}
+              <small>{{ child.post_count }}</small>
+            </router-link>
+          </div>
+        </div>
       </nav>
       <div class="header-actions">
         <button
@@ -192,10 +240,28 @@ onUnmounted(() => {
         class="mobile-nav panel"
         aria-label="移动端导航"
       >
-        <router-link v-for="item in nav" :to="item.to" :key="item.to">
-          <Icon :name="item.icon" :size="18" />
-          {{ item.text }}
-        </router-link>
+        <template v-for="item in nav" :key="item.slug">
+          <button
+            v-if="hasChildren(item)"
+            class="mobile-nav-parent"
+            type="button"
+            :aria-expanded="activeMenu === item.slug"
+            @click="toggleSubmenu(item)"
+          >
+            <span><Icon :name="item.icon" :size="18" />{{ item.text }}</span>
+            <Icon :name="activeMenu === item.slug ? 'up' : 'down'" :size="15" />
+          </button>
+          <router-link v-else :to="item.to">
+            <Icon :name="item.icon" :size="18" />
+            {{ item.text }}
+          </router-link>
+          <div v-if="hasChildren(item) && activeMenu === item.slug" class="mobile-submenu">
+            <router-link v-for="child in item.children" :key="child.id" :to="`/category/${child.slug}`">
+              {{ child.name }}
+              <small>{{ child.post_count }}</small>
+            </router-link>
+          </div>
+        </template>
       </nav>
     </div>
   </header>

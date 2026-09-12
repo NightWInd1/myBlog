@@ -11,6 +11,7 @@ export const site = {
   announcement:
     '欢迎来到我的小小世界。愿这里的文字，能为你带来一点灵感与好心情。',
   heroImage: animeGirlHero,
+  avatarImage: animeGirlCover,
   postImages: [animeGirlCover, animeGirlHero],
   heroCredit: 'Original Sakura Night',
   github: 'https://github.com/NightWInd1',
