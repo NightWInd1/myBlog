@@ -16,12 +16,14 @@ const menuOpen = ref(false),
   scrollDistance = ref(0),
   activeMenu = ref(''),
   submenuHovered = ref(false),
+  submenuFading = ref(false),
   headerHidden = ref(false)
 const searchInput = ref(null),
   dialog = ref(null),
   searchTrigger = ref(null)
 let lastScrollY = 0
 let submenuCloseTimer
+const displaySiteName = computed(() => String(site.name || '').replace(/[.。．]+$/u, ''))
 const categoryOrder = [
   { slug: 'life', text: '生活随笔' },
   { slug: 'devops', text: '运维部署' },
@@ -48,20 +50,29 @@ function hasChildren(item) {
 }
 function toggleSubmenu(item) {
   window.clearTimeout(submenuCloseTimer)
+  submenuFading.value = false
   activeMenu.value = activeMenu.value === item.slug ? '' : item.slug
 }
 function onSubmenuEnter() {
   submenuHovered.value = true
+  submenuFading.value = false
   window.clearTimeout(submenuCloseTimer)
+}
+function scheduleSubmenuClose(delay = 420) {
+  if (!activeMenu.value || submenuHovered.value) return
+  if (submenuFading.value) return
+  window.clearTimeout(submenuCloseTimer)
+  submenuFading.value = true
+  submenuCloseTimer = window.setTimeout(() => {
+    if (!submenuHovered.value) {
+      activeMenu.value = ''
+      submenuFading.value = false
+    }
+  }, delay)
 }
 function onSubmenuLeave() {
   submenuHovered.value = false
-  if (activeMenu.value && scrolled.value) {
-    window.clearTimeout(submenuCloseTimer)
-    submenuCloseTimer = window.setTimeout(() => {
-      if (!submenuHovered.value) activeMenu.value = ''
-    }, 220)
-  }
+  scheduleSubmenuClose()
 }
 function isActive(item) {
   return item.slug === 'home'
@@ -118,14 +129,16 @@ function scroll() {
   const movingUp = currentY < lastScrollY - 2
   scrolled.value = currentY > 60
   scrollDistance.value = Math.min(currentY / 260, 1)
+  // Hide only after a meaningful downward movement. Once hidden, keep the
+  // state while scrolling settles; reveal on upward movement or at the top.
   // Keep the tray available while the pointer is inside an open submenu.
-  headerHidden.value = currentY > 120 && movingDown && !submenuHovered.value
-  if (movingUp || currentY <= 60) headerHidden.value = false
+  if (movingUp || currentY <= 60) {
+    headerHidden.value = false
+  } else if (movingDown && currentY > 120 && !submenuHovered.value) {
+    headerHidden.value = true
+  }
   if (activeMenu.value && !submenuHovered.value) {
-    window.clearTimeout(submenuCloseTimer)
-    submenuCloseTimer = window.setTimeout(() => {
-      if (!submenuHovered.value) activeMenu.value = ''
-    }, 260)
+    scheduleSubmenuClose(480)
   }
   lastScrollY = currentY
 }
@@ -135,6 +148,7 @@ watch(
     menuOpen.value = settingsOpen.value = false
     activeMenu.value = ''
     submenuHovered.value = false
+    submenuFading.value = false
   },
 )
 onMounted(() => {
@@ -162,7 +176,7 @@ onUnmounted(() => {
     <div class="header-inner">
       <router-link class="brand" to="/" aria-label="晚风如歌首页" @click.prevent="goHome">
         <span class="brand-mark"><Icon name="leaf" :size="25" /></span>
-        {{ site.name }}
+        {{ displaySiteName }}
       </router-link>
       <nav class="desktop-nav" aria-label="主导航">
         <div
@@ -198,6 +212,7 @@ onUnmounted(() => {
             name="submenu"
             tag="div"
             class="nav-submenu"
+            :class="{ 'submenu-fading': submenuFading }"
             @mouseenter="onSubmenuEnter"
             @mouseleave="onSubmenuLeave"
           >
@@ -325,6 +340,7 @@ onUnmounted(() => {
             name="submenu"
             tag="div"
             class="mobile-submenu"
+            :class="{ 'submenu-fading': submenuFading }"
             @mouseenter="onSubmenuEnter"
             @mouseleave="onSubmenuLeave"
           >
