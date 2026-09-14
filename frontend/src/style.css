@@ -2335,6 +2335,10 @@ body::before { content: ''; position: fixed; inset: 0; z-index: -2; pointer-even
 .site-header.scrolled {
   transform: translateY(var(--nav-lift, 0px));
 }
+.site-header.header-hidden {
+  transform: translateY(calc(-100% - 28px));
+  pointer-events: none;
+}
 .site-header.scrolled .header-inner {
   background: rgba(255, 247, 251, var(--nav-alpha, .9));
   box-shadow: 0 12px 32px rgba(127, 54, 94, .2), 0 0 0 1px rgba(255, 255, 255, .72);

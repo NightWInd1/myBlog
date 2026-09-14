@@ -14,10 +14,14 @@ const menuOpen = ref(false),
   query = ref(''),
   scrolled = ref(false),
   scrollDistance = ref(0),
-  activeMenu = ref('')
+  activeMenu = ref(''),
+  submenuHovered = ref(false),
+  headerHidden = ref(false)
 const searchInput = ref(null),
   dialog = ref(null),
   searchTrigger = ref(null)
+let lastScrollY = 0
+let submenuCloseTimer
 const categoryOrder = [
   { slug: 'life', text: '生活随笔' },
   { slug: 'devops', text: '运维部署' },
@@ -43,7 +47,21 @@ function hasChildren(item) {
   return item.children?.length > 0
 }
 function toggleSubmenu(item) {
+  window.clearTimeout(submenuCloseTimer)
   activeMenu.value = activeMenu.value === item.slug ? '' : item.slug
+}
+function onSubmenuEnter() {
+  submenuHovered.value = true
+  window.clearTimeout(submenuCloseTimer)
+}
+function onSubmenuLeave() {
+  submenuHovered.value = false
+  if (activeMenu.value && scrolled.value) {
+    window.clearTimeout(submenuCloseTimer)
+    submenuCloseTimer = window.setTimeout(() => {
+      if (!submenuHovered.value) activeMenu.value = ''
+    }, 220)
+  }
 }
 function isActive(item) {
   return item.slug === 'home'
@@ -95,31 +113,46 @@ function toggleMenu() {
   settingsOpen.value = false
 }
 function scroll() {
-  scrolled.value = window.scrollY > 60
-  scrollDistance.value = Math.min(window.scrollY / 260, 1)
-  if (activeMenu.value) activeMenu.value = ''
+  const currentY = Math.max(0, window.scrollY)
+  const movingDown = currentY > lastScrollY + 2
+  const movingUp = currentY < lastScrollY - 2
+  scrolled.value = currentY > 60
+  scrollDistance.value = Math.min(currentY / 260, 1)
+  // Keep the tray available while the pointer is inside an open submenu.
+  headerHidden.value = currentY > 120 && movingDown && !submenuHovered.value
+  if (movingUp || currentY <= 60) headerHidden.value = false
+  if (activeMenu.value && !submenuHovered.value) {
+    window.clearTimeout(submenuCloseTimer)
+    submenuCloseTimer = window.setTimeout(() => {
+      if (!submenuHovered.value) activeMenu.value = ''
+    }, 260)
+  }
+  lastScrollY = currentY
 }
 watch(
   () => route.fullPath,
   () => {
     menuOpen.value = settingsOpen.value = false
     activeMenu.value = ''
+    submenuHovered.value = false
   },
 )
 onMounted(() => {
   window.addEventListener('keydown', keydown)
   window.addEventListener('scroll', scroll, { passive: true })
+  lastScrollY = window.scrollY
   scroll()
 })
 onUnmounted(() => {
   window.removeEventListener('keydown', keydown)
   window.removeEventListener('scroll', scroll)
+  window.clearTimeout(submenuCloseTimer)
 })
 </script>
 <template>
   <header
     class="site-header"
-    :class="{ scrolled }"
+    :class="{ scrolled, 'header-hidden': headerHidden }"
     :style="{
       '--nav-lift': `${scrollDistance * -4}px`,
       '--nav-alpha': (0.42 + scrollDistance * 0.48).toFixed(2),
@@ -130,7 +163,6 @@ onUnmounted(() => {
       <router-link class="brand" to="/" aria-label="晚风如歌首页" @click.prevent="goHome">
         <span class="brand-mark"><Icon name="leaf" :size="25" /></span>
         {{ site.name }}
-        <span class="brand-dot">.</span>
       </router-link>
       <nav class="desktop-nav" aria-label="主导航">
         <div
@@ -161,11 +193,13 @@ onUnmounted(() => {
             <Icon :name="item.icon" :size="17" />
             {{ item.text }}
           </router-link>
-          <TransitionGroup
+            <TransitionGroup
             v-if="hasChildren(item) && activeMenu === item.slug"
             name="submenu"
             tag="div"
             class="nav-submenu"
+            @mouseenter="onSubmenuEnter"
+            @mouseleave="onSubmenuLeave"
           >
             <router-link
               v-for="(child, index) in item.children"
@@ -291,6 +325,8 @@ onUnmounted(() => {
             name="submenu"
             tag="div"
             class="mobile-submenu"
+            @mouseenter="onSubmenuEnter"
+            @mouseleave="onSubmenuLeave"
           >
             <router-link
               v-for="(child, index) in item.children"
